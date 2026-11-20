@@ -4,5 +4,5 @@
   "private": true,
   "scripts": { "www": "mkdir -p www && cp demo.html www/index.html", "ios": "npm run www && npx cap add ios && npx cap sync ios && npx cap open ios" },
   "dependencies": { "@capacitor/core": "^7.0.0", "@capacitor/ios": "^7.0.0" },
-  "devDependencies": { "@capacitor/cli": "^7.0.0" }
+  "devDependencies": { "@capacitor/cli": "^8.6.2" }
 }
