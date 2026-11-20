@@ -1,0 +1,17 @@
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+android/app/src/main/assets/*
+!android/app/src/main/assets/.gitkeep
+node_modules/
+www/
+ios/
+*.jks
+*.keystore
+desktop/node_modules/
+desktop/dist/
+desktop/demo.html
+app.check.mjs
+.DS_Store
