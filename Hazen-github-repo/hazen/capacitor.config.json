@@ -1,6 +1,0 @@
-{
-  "appId": "app.hazen.camera",
-  "appName": "Hazen",
-  "webDir": "www",
-  "ios": { "contentInset": "never" }
-}

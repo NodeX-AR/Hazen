@@ -1,9 +1,0 @@
-Hazen
-Copyright (c) 2026 Aswanth R. See LICENSE.
-
-Third-party components used by Hazen (each under its own license):
-- MediaPipe Tasks Vision (Google), Apache License 2.0 - loaded from cdn.jsdelivr.net
-- MediaPipe models: face_landmarker, gesture_recognizer, selfie_segmenter (Google), Apache License 2.0 - downloaded from storage.googleapis.com
-- Android: AndroidX libraries (Apache 2.0), Kotlin (Apache 2.0)
-- iOS: Capacitor (MIT)
-- Desktop: Electron (MIT), Chromium and its components (BSD-style and others)
