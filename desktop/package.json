@@ -13,7 +13,7 @@
     "dist": "node prepare.js && electron-builder --publish never"
   },
   "devDependencies": {
-    "electron": "^39.0.0",
+    "electron": "^45.3.3",
     "electron-builder": "^26.0.0"
   },
   "build": {
