@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/NodeX-AR/hazen/security/advisories/new
+    about: Please report security issues privately.
+  - name: Installation help
+    url: https://github.com/NodeX-AR/hazen/blob/main/docs/INSTALLATION.md
+    about: Read the install guide first.

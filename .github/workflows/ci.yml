@@ -1,0 +1,28 @@
+name: CI
+on:
+  push: { branches: [main, master] }
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Required files exist
+        run: |
+          for f in demo.html index.html LICENSE README.md manifest.webmanifest sw.js; do test -f "$f" || { echo "missing $f"; exit 1; }; done
+      - name: App JavaScript parses
+        run: |
+          python3 - <<'PY'
+          import re
+          s=open('demo.html',encoding='utf-8').read()
+          m=re.search(r'<script type="module">(.*)</script>',s,re.S)
+          open('app.check.mjs','w').write(m.group(1))
+          PY
+          node --check app.check.mjs
+      - name: JSON files are valid
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest'));JSON.parse(require('fs').readFileSync('package.json'));JSON.parse(require('fs').readFileSync('capacitor.config.json'));JSON.parse(require('fs').readFileSync('desktop/package.json'))"
+      - name: Service worker parses
+        run: node --check sw.js && node --check desktop/main.js
