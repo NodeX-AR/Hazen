@@ -12,6 +12,10 @@ jobs:
       - name: Required files exist
         run: |
           for f in demo.html index.html LICENSE README.md manifest.webmanifest sw.js; do test -f "$f" || { echo "missing $f"; exit 1; }; done
+      - name: Android Gradle files are intact
+        run: |
+          for f in android/settings.gradle.kts android/build.gradle.kts android/app/build.gradle.kts; do test -s "$f" || { echo "$f is empty"; exit 1; }; done
+          grep -q 'include(":app")' android/settings.gradle.kts || { echo 'settings.gradle.kts must include(":app")'; exit 1; }
       - name: App JavaScript parses
         run: |
           python3 - <<'PY'
