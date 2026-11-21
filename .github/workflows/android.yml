@@ -41,6 +41,7 @@ jobs:
       - name: Signed release (needs the keystore secrets)
         if: env.KS_B64 != ''
         working-directory: android
+        shell: bash
         env:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -48,6 +49,24 @@ jobs:
         run: |
           echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
           export KEYSTORE_FILE="$RUNNER_TEMP/release.jks"
+          if [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::error::Secret ANDROID_KEYSTORE_PASSWORD is missing or empty. Add it under Settings > Secrets and variables > Actions."; exit 1
+          fi
+          # List the keystore: this also proves the password is right.
+          if ! keytool -list -keystore "$KEYSTORE_FILE" -storepass "$KEYSTORE_PASSWORD" > "$RUNNER_TEMP/ks.txt" 2>&1; then
+            cat "$RUNNER_TEMP/ks.txt"; echo "::error::Could not open the keystore. ANDROID_KEYSTORE_PASSWORD is wrong, or ANDROID_KEYSTORE_BASE64 is not a valid .jks file."; exit 1
+          fi
+          # If the alias secret is empty, use the first key found in the keystore.
+          if [ -z "$KEY_ALIAS" ]; then
+            KEY_ALIAS=$(grep -m1 'PrivateKeyEntry' "$RUNNER_TEMP/ks.txt" | cut -d, -f1)
+            echo "ANDROID_KEY_ALIAS not set; using the keystore's key: $KEY_ALIAS"
+          fi
+          if [ -z "$KEY_ALIAS" ]; then
+            cat "$RUNNER_TEMP/ks.txt"; echo "::error::No private key found in the keystore."; exit 1
+          fi
+          # A key password is usually the same as the keystore password.
+          if [ -z "$KEY_PASSWORD" ]; then KEY_PASSWORD="$KEYSTORE_PASSWORD"; fi
+          export KEY_ALIAS KEY_PASSWORD KEYSTORE_PASSWORD
           gradle bundleRelease assembleRelease --no-daemon
 
       - uses: actions/upload-artifact@v4
