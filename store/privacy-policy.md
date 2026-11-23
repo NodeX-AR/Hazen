@@ -7,8 +7,8 @@ Last updated: 20 November 2026. Contact: aswanthr82@gmail.com
 - Camera and microphone are used only to take photos and record video. Photo library access is used to import media you choose and to save your captures.
 - We do not collect analytics, advertising identifiers or location.
 
-**Third-party downloads**
-The first time you use an AI feature, Hazen downloads small model files from Google (storage.googleapis.com) and jsDelivr (cdn.jsdelivr.net). Those services may receive your IP address as part of the download. No photos or videos are sent.
+**On-device AI**
+The AI engine and models are included inside the Hazen apps. In the web version they are saved to your device once, from the Hazen website, the first time you open it. No photos or videos are ever sent.
 Voice Shutter (optional) uses your device's speech recognition service, which may send audio to your platform provider (Google or Apple).
 
 **Children**

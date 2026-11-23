@@ -3,6 +3,10 @@ All notable changes. Format: Keep a Changelog; versions follow Semantic Versioni
 
 ## [Unreleased]
 ### Added
+- Direct downloads: loose release files with fixed names; the website buttons download the exact file for the visitor's device.
+- Branded installers: Windows setup wizard with sidebar art and licence page, macOS drag-to-Applications disk image, and one-line installers for macOS, Linux and Windows.
+- On-device AI is bundled inside every app and saved once for the web version (first-run setup screen). Nothing is downloaded after install.
+- Low-end mode (auto-detected): 720p, 24 fps, lighter graphics.
 - Web demo asks for a GitHub star after photo 2, 10 and 20, then alternates install / star every 10 photos (web only; never in the store apps).
 - Desktop apps for Windows, macOS and Linux (Electron).
 - Project website, live demo, installable web app (PWA).

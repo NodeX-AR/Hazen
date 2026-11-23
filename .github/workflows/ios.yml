@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - run: npm install && npm run www && npx cap add ios && npx cap sync ios
+      - run: npm install && npm run www && node scripts/fetch-models.mjs www/models && npx cap add ios && npx cap sync ios
       - name: Install CocoaPods dependencies
         run: cd ios/App && pod install
       - name: Show workspace

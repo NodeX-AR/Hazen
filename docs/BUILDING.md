@@ -1,6 +1,13 @@
 # Building and releasing
 
-All builds run on GitHub Actions. Push a tag to release:
+All builds run on GitHub Actions. To publish a release (this is what makes the website's download buttons work):
+- Push a tag: `git tag v1.0.0 && git push origin v1.0.0`, **or**
+- Actions > *Build Android* > Run workflow, and type `v1.0.0` in **release_tag**. Do the same for *Build desktop apps*.
+
+Each workflow attaches loose files with fixed names (`Hazen.apk`, `Hazen.aab`, `Hazen-Setup-x64.exe`, `Hazen-Portable-x64.exe`, `Hazen-mac-arm64.dmg`, `Hazen-mac-x64.dmg`, `Hazen-linux-x64.AppImage`, `Hazen-linux-x64.deb`) to the GitHub Release, so `releases/latest/download/<name>` always downloads the exact file. Zipped build results on the Actions run page are only for debugging.
+The AI models are downloaded once at build time by `scripts/fetch-models.mjs` and placed inside every package.
+
+Tags also work:
 ```
 git tag v1.0.0 && git push origin v1.0.0
 ```

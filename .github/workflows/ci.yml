@@ -11,7 +11,7 @@ jobs:
         with: { node-version: 22 }
       - name: Required files exist
         run: |
-          for f in demo.html index.html LICENSE README.md manifest.webmanifest sw.js; do test -f "$f" || { echo "missing $f"; exit 1; }; done
+          for f in demo.html index.html LICENSE README.md manifest.webmanifest sw.js scripts/fetch-models.mjs install.sh install.ps1; do test -f "$f" || { echo "missing $f"; exit 1; }; done
       - name: Android Gradle files are intact
         run: |
           for f in android/settings.gradle.kts android/build.gradle.kts android/app/build.gradle.kts; do test -s "$f" || { echo "$f is empty"; exit 1; }; done
@@ -29,4 +29,4 @@ jobs:
         run: |
           node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest'));JSON.parse(require('fs').readFileSync('package.json'));JSON.parse(require('fs').readFileSync('capacitor.config.json'));JSON.parse(require('fs').readFileSync('desktop/package.json'))"
       - name: Service worker parses
-        run: node --check sw.js && node --check desktop/main.js
+        run: node --check sw.js && node --check desktop/main.js && node --check scripts/fetch-models.mjs && sh -n install.sh

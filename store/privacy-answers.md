@@ -4,6 +4,6 @@
 - Data shared with third parties: **None** by the app itself.
 - Tracking / ads: **No**. No analytics, no advertising ID, no third-party SDKs.
 - Permissions to declare: Camera, Microphone, Photos (add/import).
-- Network use: downloads AI models (Google storage, jsDelivr); Voice Shutter uses the system speech service (optional).
+- Network use: none required. AI models ship inside the app (the web version saves them once from the Hazen website); Voice Shutter uses the system speech service (optional).
 - Encryption: standard HTTPS only (iOS: ITSAppUsesNonExemptEncryption = false is already set).
 - Target audience: general (13+). Content rating questionnaire: no violence, no user-generated content shared, no purchases.

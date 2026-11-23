@@ -15,3 +15,7 @@ desktop/dist/
 desktop/demo.html
 app.check.mjs
 .DS_Store
+desktop/models/
+models/
+_site/
+android/app/src/main/assets/models/

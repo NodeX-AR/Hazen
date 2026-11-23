@@ -92,10 +92,11 @@ h1 .l2{color:#6f6f69}
 .card.o{background:var(--o);color:#140700}.card.o p{color:#2b1200}.card.o .lab{color:#140700}
 .plat{padding:16vh 0}
 .rows{margin-top:6vh;border-top:.0625rem solid #0a0a0a}
-.row{display:grid;grid-template-columns:1.1fr 1.4fr auto;gap:1.5rem;align-items:center;padding:1.875rem 0;border-bottom:.0625rem solid rgba(0,0,0,.14);transition:padding .4s,background .4s}
+.cmd{margin-top:6vh}.cl{display:flex;gap:.75rem;align-items:center;background:#0a0a0a;color:#f4f4f0;border-radius:1rem;padding:.8rem .8rem .8rem 1.1rem;margin-top:.75rem}.cl code{font:.8125rem ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap;overflow-x:auto;flex:1}.cl .btn{background:var(--o);border-color:var(--o);color:#140700;flex:none}.cmd small{display:block;margin-top:.9rem;color:#66665f;font-size:.8125rem;max-width:44rem}
+.row{display:grid;grid-template-columns:1.1fr 1.4fr 16rem;gap:1.5rem;align-items:center;padding:1.875rem 0;border-bottom:.0625rem solid rgba(0,0,0,.14);transition:padding .4s,background .4s}
 .row:hover{padding-left:1rem;background:#fff}
 .row b{font-size:clamp(1.75rem,3.6vw,3rem);letter-spacing:-.04em;font-weight:700;line-height:1}.row span{color:#66665f;justify-self:start}
-.row .btn{border-color:rgba(0,0,0,.25);color:var(--ink)}.row .btn:hover{background:var(--o);border-color:var(--o);color:#140700}
+.acts{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end}.row .btn{border-color:rgba(0,0,0,.25);color:var(--ink)}.row .btn:hover{background:var(--o);border-color:var(--o);color:#140700}
 /* demo */
 .demo{padding:16vh 0;position:relative;overflow:hidden}
 .dg{display:grid;grid-template-columns:1.1fr .9fr;gap:5vw;align-items:center}
@@ -130,7 +131,7 @@ footer{position:relative;padding:0 0 1.75rem;overflow:hidden}
  .hero-ph .a{transform:translate(calc(var(--pw)*-.5 - var(--hs,1)*14vh),calc(var(--ph)*.48 - var(--hp,0)*6vh)) rotate(-9deg)}
  .hero-ph .b{transform:translate(calc(var(--pw)*-.5 + var(--hs,1)*14vh),calc(var(--ph)*.48 - var(--hp,0)*6vh)) rotate(9deg)}
  .stage .phone{--ph:min(42vh,23.75rem)}
- .row{grid-template-columns:1fr auto}.row span{display:none}
+ .row{grid-template-columns:1fr;gap:.75rem}.row span{display:block;font-size:.9375rem}.acts{justify-content:flex-start}
  .card{min-height:35rem}.frame{--ph:min(70vh,37.5rem)}.dg .txt{order:-1}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.w>span,.rv{transform:none;opacity:1}.say .k{opacity:1}}
@@ -142,7 +143,7 @@ footer{position:relative;padding:0 0 1.75rem;overflow:hidden}
   <a class="brand" href="#top"><img src="branding/hazen-logo.svg" alt="">Hazen</a><span class="sp"></span>
   <a class="l" href="#story">Product</a><a class="l" href="#details">Details</a><a class="l" href="#download">Download</a><a class="l" href="#faq">FAQ</a>
   <a class="btn g sm" href="https://github.com/NodeX-AR/hazen" target="_blank" rel="noopener">★ Star</a>
-  <a class="btn o sm" href="#download">Get Hazen</a>
+  <a class="btn o sm" href="#download" data-dl>Get Hazen</a>
 </nav>
 
 <header class="hero" id="top">
@@ -150,7 +151,7 @@ footer{position:relative;padding:0 0 1.75rem;overflow:hidden}
     <p class="eyebrow">Introducing Hazen</p>
     <h1 data-split data-now><span class="l1">One camera.</span><br><span class="l2">Every screen.</span></h1>
     <p class="lede rv" style="--d:500ms">A pro camera, a real editor and a private album in one app. Android, iPhone, Windows, macOS, Linux and the web.</p>
-    <div class="cta rv" style="--d:650ms"><a class="btn o" href="#download">Download</a><a class="btn g" href="#story">See how it works</a></div>
+    <div class="cta rv" style="--d:650ms"><a class="btn o" href="#download" data-dl data-label>Download</a><a class="btn g" href="#story">See how it works</a></div>
   </div>
   <div class="hero-glow"></div>
   <div class="hero-ph" id="heroPh">
@@ -218,13 +219,17 @@ footer{position:relative;padding:0 0 1.75rem;overflow:hidden}
   <div class="wrap">
     <p class="eyebrow">Download</p><h2 class="big" data-split>Pick your <span class="or">screen.</span></h2>
     <div class="rows">
-      <a class="row rv" href="https://github.com/NodeX-AR/hazen/releases/latest"><b>Android</b><span>APK from GitHub. Google Play when listed.</span><i class="btn">Download</i></a>
-      <a class="row rv" href="docs/INSTALLATION.md#iphone-and-ipad"><b>iPhone &amp; iPad</b><span>App Store when listed. Or add the web app to your Home Screen.</span><i class="btn">How to install</i></a>
-      <a class="row rv" href="https://github.com/NodeX-AR/hazen/releases/latest"><b>Windows</b><span>Installer or portable .exe</span><i class="btn">Download</i></a>
-      <a class="row rv" href="https://github.com/NodeX-AR/hazen/releases/latest"><b>macOS</b><span>.dmg for Apple Silicon and Intel</span><i class="btn">Download</i></a>
-      <a class="row rv" href="https://github.com/NodeX-AR/hazen/releases/latest"><b>Linux</b><span>AppImage or .deb</span><i class="btn">Download</i></a>
-      <a class="row rv" href="demo.html"><b>Web</b><span>Any modern browser. Install it from the browser menu.</span><i class="btn">Open</i></a>
+      <div class="row rv"><b>Android</b><span>Installs straight from the file. No store needed.</span><div class="acts"><a class="btn" href="https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen.apk">Download APK</a></div></div>
+      <div class="row rv"><b>iPhone &amp; iPad</b><span>App Store when listed. Or add the web app to your Home Screen.</span><div class="acts"><a class="btn" href="docs/INSTALLATION.md#iphone-and-ipad">How to install</a></div></div>
+      <div class="row rv"><b>Windows</b><span>A guided installer, or a portable .exe.</span><div class="acts"><a class="btn" href="https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-Setup-x64.exe">Installer</a><a class="btn" href="https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-Portable-x64.exe">Portable</a></div></div>
+      <div class="row rv"><b>macOS</b><span>Disk image: drag Hazen into Applications.</span><div class="acts"><a class="btn" href="https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-mac-arm64.dmg">Apple Silicon</a><a class="btn" href="https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-mac-x64.dmg">Intel</a></div></div>
+      <div class="row rv"><b>Linux</b><span>AppImage for any distribution, or a .deb.</span><div class="acts"><a class="btn" href="https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-linux-x64.AppImage">AppImage</a><a class="btn" href="https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-linux-x64.deb">.deb</a></div></div>
+      <div class="row rv"><b>Web</b><span>Any modern browser. Installs and works offline.</span><div class="acts"><a class="btn" href="demo.html">Open</a></div></div>
     </div>
+    <div class="cmd rv"><p class="eyebrow">Or install with one line</p>
+      <div class="cl"><code id="c1">curl -fsSL https://raw.githubusercontent.com/NodeX-AR/Hazen/main/install.sh | sh</code><button class="btn sm" type="button" data-copy="c1">Copy</button></div>
+      <div class="cl"><code id="c2">irm https://raw.githubusercontent.com/NodeX-AR/Hazen/main/install.ps1 | iex</code><button class="btn sm" type="button" data-copy="c2">Copy</button></div>
+      <small>First line: macOS and Linux. Second line: Windows PowerShell. The on-device AI is already inside every app, so nothing more is downloaded.</small></div>
   </div>
 </section>
 
@@ -241,7 +246,7 @@ footer{position:relative;padding:0 0 1.75rem;overflow:hidden}
     <div class="three">
       <div class="t rv"><b>0</b><span>accounts</span><small>Nothing to sign up for.</small></div>
       <div class="t rv" style="--d:90ms"><b>0</b><span>uploads</span><small>Photos and videos never leave your device.</small></div>
-      <div class="t rv" style="--d:180ms"><b>0</b><span>trackers</span><small>No analytics. The small on-device AI models download once.</small></div>
+      <div class="t rv" style="--d:180ms"><b>0</b><span>trackers</span><small>No analytics. The on-device AI is saved on your device during setup, then never downloaded again.</small></div>
     </div>
   </div>
 </section>
@@ -250,8 +255,9 @@ footer{position:relative;padding:0 0 1.75rem;overflow:hidden}
   <div class="wrap">
     <p class="eyebrow">FAQ</p><h2 class="big" data-split style="margin-bottom:5vh">Questions,<br><span class="mut">answered.</span></h2>
     <details class="rv"><summary>Is Hazen free?</summary><p>Yes. Use it for personal or commercial work at no cost. The license lets you use and share unmodified copies, but not modify, repackage or resell it.</p></details>
-    <details class="rv"><summary>Where do my photos go?</summary><p>Nowhere. They stay on your device. There is no server and no account. The AI models download once from Google storage and jsDelivr, and no photos are sent.</p></details>
-    <details class="rv"><summary>Does it work offline?</summary><p>Yes, after the first run. Only the first download of each AI model needs a connection.</p></details>
+    <details class="rv"><summary>Where do my photos go?</summary><p>Nowhere. They stay on your device. There is no server and no account. The AI models ship inside the app, or are saved to your device once during setup, and no photos are ever sent.</p></details>
+    <details class="rv"><summary>Does it work offline?</summary><p>Yes. The apps carry the AI inside them. In the browser, a one-time setup saves it to your device, and after that nothing is downloaded again.</p></details>
+    <details class="rv"><summary>Will it run on an older phone?</summary><p>Yes, that is what it is tuned for. Hazen detects budget devices and switches to Low-end mode: 720p, 24 frames per second and lighter graphics. You can switch it in Settings, Pro.</p></details>
     <details class="rv"><summary>Is it open source?</summary><p>No. The code is public so you can read and audit it, under a use-only license.</p></details>
     <details class="rv"><summary>How do I save photos on iPhone?</summary><p>Photos stay in the Hazen album. Tap Share, then Save Image, to put them in Photos.</p></details>
     <details class="rv"><summary>Something broke. Who do I tell?</summary><p>Open an issue on GitHub or email aswanthr82@gmail.com. For security problems please email privately.</p></details>
@@ -259,7 +265,7 @@ footer{position:relative;padding:0 0 1.75rem;overflow:hidden}
 </section>
 
 <section class="final">
-  <div class="wrap"><p class="eyebrow">Ready?</p><h2 class="big" data-split style="margin:1rem 0 1.875rem">One camera.<br><span class="or">Every screen.</span></h2><div class="cta"><a class="btn o" href="#download">Get Hazen</a><a class="btn g" href="https://github.com/NodeX-AR/hazen" target="_blank" rel="noopener">★ Star on GitHub</a></div></div>
+  <div class="wrap"><p class="eyebrow">Ready?</p><h2 class="big" data-split style="margin:1rem 0 1.875rem">One camera.<br><span class="or">Every screen.</span></h2><div class="cta"><a class="btn o" href="#download" data-dl data-label>Get Hazen</a><a class="btn g" href="https://github.com/NodeX-AR/hazen" target="_blank" rel="noopener">★ Star on GitHub</a></div></div>
 </section>
 
 <footer><div class="wrap">
@@ -336,6 +342,11 @@ steps.forEach((s,i)=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersec
     begin();raf=requestAnimationFrame(step)}
   addEventListener('load',()=>setTimeout(start,600),{once:true});
 })();
+/* download buttons: send people to the exact file for their device */
+(function(){const ua=navigator.userAgent,R='https://github.com/NodeX-AR/Hazen/releases/latest/download/';let t=null;
+  if(/Android/i.test(ua))t=['Download for Android',R+'Hazen.apk'];else if(/Windows/i.test(ua))t=['Download for Windows',R+'Hazen-Setup-x64.exe'];else if(/Linux/i.test(ua)&&!/Android/i.test(ua))t=['Download for Linux',R+'Hazen-linux-x64.AppImage'];
+  if(t)$$('[data-dl]').forEach(a=>{a.href=t[1];if(a.hasAttribute('data-label'))a.textContent=t[0]});
+  $$('[data-copy]').forEach(b=>b.onclick=()=>{const c=document.getElementById(b.dataset.copy).textContent;(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)}).catch(()=>{})})})();
 /* demo */
 $('#go').onclick=()=>{const f=document.createElement('iframe');f.src='demo.html';f.title='Hazen demo';f.allow='camera; microphone; fullscreen';$('#ph').replaceWith(f)};
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});

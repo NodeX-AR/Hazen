@@ -6,6 +6,11 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Publish a GitHub Release with this tag (for example v1.0.0). Leave empty to only build."
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -16,6 +21,7 @@ jobs:
     env:
       KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       VERSION_CODE: ${{ github.run_number }}
+      TAG: ${{ inputs.release_tag || (startsWith(github.ref, 'refs/tags/v') && github.ref_name) || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -23,16 +29,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: "8.11.1" }
 
-      - name: Bundle the web app into the Android app
+      - name: Put the app and the on-device AI models inside the Android app
+        shell: bash
         run: |
           set -e
           test -f demo.html
           mkdir -p android/app/src/main/assets
           cp demo.html android/app/src/main/assets/index.html
+          node scripts/fetch-models.mjs android/app/src/main/assets/models
 
-      - name: Version name from tag
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: echo "VERSION_NAME=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+      - name: Version name from the tag
+        if: env.TAG != ''
+        shell: bash
+        run: echo "VERSION_NAME=${TAG#v}" >> "$GITHUB_ENV"
 
       - name: Debug APK (always)
         working-directory: android
@@ -52,40 +61,41 @@ jobs:
           if [ -z "$KEYSTORE_PASSWORD" ]; then
             echo "::error::Secret ANDROID_KEYSTORE_PASSWORD is missing or empty. Add it under Settings > Secrets and variables > Actions."; exit 1
           fi
-          # List the keystore: this also proves the password is right.
           if ! keytool -list -keystore "$KEYSTORE_FILE" -storepass "$KEYSTORE_PASSWORD" > "$RUNNER_TEMP/ks.txt" 2>&1; then
             cat "$RUNNER_TEMP/ks.txt"; echo "::error::Could not open the keystore. ANDROID_KEYSTORE_PASSWORD is wrong, or ANDROID_KEYSTORE_BASE64 is not a valid .jks file."; exit 1
           fi
-          # If the alias secret is empty, use the first key found in the keystore.
           if [ -z "$KEY_ALIAS" ]; then
             KEY_ALIAS=$(grep -m1 'PrivateKeyEntry' "$RUNNER_TEMP/ks.txt" | cut -d, -f1)
             echo "ANDROID_KEY_ALIAS not set; using the keystore's key: $KEY_ALIAS"
           fi
-          if [ -z "$KEY_ALIAS" ]; then
-            cat "$RUNNER_TEMP/ks.txt"; echo "::error::No private key found in the keystore."; exit 1
-          fi
-          # A key password is usually the same as the keystore password.
+          if [ -z "$KEY_ALIAS" ]; then cat "$RUNNER_TEMP/ks.txt"; echo "::error::No private key found in the keystore."; exit 1; fi
           if [ -z "$KEY_PASSWORD" ]; then KEY_PASSWORD="$KEYSTORE_PASSWORD"; fi
           export KEY_ALIAS KEY_PASSWORD KEYSTORE_PASSWORD
           gradle bundleRelease assembleRelease --no-daemon
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Hazen-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Collect the files people download (fixed names, so download links never change)
+        shell: bash
+        run: |
+          mkdir -p dist
+          if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
+            cp android/app/build/outputs/apk/release/app-release.apk dist/Hazen.apk
+            cp android/app/build/outputs/bundle/release/app-release.aab dist/Hazen.aab
+          else
+            echo "No signing keys found: publishing the debug build as Hazen.apk (installable, but not for Google Play)."
+            cp android/app/build/outputs/apk/debug/app-debug.apk dist/Hazen.apk
+          fi
+          ls -la dist
 
       - uses: actions/upload-artifact@v4
-        if: env.KS_B64 != ''
         with:
-          name: Hazen-release-aab-and-apk
-          path: |
-            android/app/build/outputs/bundle/release/app-release.aab
-            android/app/build/outputs/apk/release/app-release.apk
+          name: Hazen-android
+          path: dist/*
 
-      - name: Attach to the GitHub release
-        if: startsWith(github.ref, 'refs/tags/') && env.KS_B64 != ''
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            android/app/build/outputs/bundle/release/app-release.aab
-            android/app/build/outputs/apk/release/app-release.apk
+      - name: Publish to the GitHub Release
+        if: env.TAG != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Hazen $TAG" --generate-notes --target "$GITHUB_SHA" || true
+          gh release upload "$TAG" dist/* --clobber

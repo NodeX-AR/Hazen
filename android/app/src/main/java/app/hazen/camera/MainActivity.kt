@@ -82,8 +82,19 @@ class MainActivity : ComponentActivity() {
             settings.allowContentAccess = true
             addJavascriptInterface(Bridge(applicationContext), "CarCamAndroid")
             webViewClient = object : WebViewClient() {
-                override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? =
-                    loader.shouldInterceptRequest(request.url)
+                override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
+                    val res = loader.shouldInterceptRequest(request.url) ?: return null
+                    // The bundled AI engine needs exact MIME types (WebAssembly streaming, ES modules)
+                    val path = request.url.path ?: return res
+                    val mime = when {
+                        path.endsWith(".wasm") -> "application/wasm"
+                        path.endsWith(".js") -> "text/javascript"
+                        path.endsWith(".task") || path.endsWith(".tflite") -> "application/octet-stream"
+                        else -> null
+                    }
+                    if (mime != null) res.mimeType = mime
+                    return res
+                }
 
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                     if (request.url.host == "appassets.androidplatform.net") return false

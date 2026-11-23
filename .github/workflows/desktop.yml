@@ -1,8 +1,18 @@
 name: Build desktop apps (Windows, macOS, Linux)
+
 on:
-  push: { tags: ["v*"] }
+  push:
+    tags: ["v*"]
   workflow_dispatch:
-permissions: { contents: write }
+    inputs:
+      release_tag:
+        description: "Publish a GitHub Release with this tag (for example v1.0.0). Leave empty to only build."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -10,21 +20,20 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      TAG: ${{ inputs.release_tag || (startsWith(github.ref, 'refs/tags/v') && github.ref_name) || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
+
+      - name: Put the on-device AI models inside the app
+        shell: bash
+        run: node scripts/fetch-models.mjs desktop/models
+
       - name: Build installers
         working-directory: desktop
         shell: bash
-        run: |
-          # Unset signing variables that are empty (a missing secret is an empty string, which breaks electron-builder)
-          for v in CSC_LINK CSC_KEY_PASSWORD WIN_CSC_LINK WIN_CSC_KEY_PASSWORD APPLE_ID APPLE_APP_SPECIFIC_PASSWORD APPLE_TEAM_ID; do
-            if [ -z "${!v}" ]; then unset "$v"; fi
-          done
-          if [ -z "$CSC_LINK" ]; then export CSC_IDENTITY_AUTO_DISCOVERY=false; fi
-          npm install
-          npm run dist
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -33,6 +42,19 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          # A missing secret is an empty string, which breaks electron-builder: unset empty signing values.
+          for v in CSC_LINK CSC_KEY_PASSWORD WIN_CSC_LINK WIN_CSC_KEY_PASSWORD APPLE_ID APPLE_APP_SPECIFIC_PASSWORD APPLE_TEAM_ID; do
+            if [ -z "${!v}" ]; then unset "$v"; fi
+          done
+          if [ -z "$CSC_LINK" ]; then export CSC_IDENTITY_AUTO_DISCOVERY=false; fi
+          npm install
+          npm run dist
+
+      - name: List what was built
+        shell: bash
+        run: ls -la desktop/dist
+
       - uses: actions/upload-artifact@v4
         with:
           name: Hazen-desktop-${{ matrix.os }}
@@ -42,13 +64,14 @@ jobs:
             desktop/dist/*.zip
             desktop/dist/*.AppImage
             desktop/dist/*.deb
-      - name: Attach to the GitHub release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            desktop/dist/*.exe
-            desktop/dist/*.dmg
-            desktop/dist/*.zip
-            desktop/dist/*.AppImage
-            desktop/dist/*.deb
+
+      - name: Publish to the GitHub Release
+        if: env.TAG != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          files=(desktop/dist/*.exe desktop/dist/*.dmg desktop/dist/*.zip desktop/dist/*.AppImage desktop/dist/*.deb)
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Hazen $TAG" --generate-notes --target "$GITHUB_SHA" || true
+          gh release upload "$TAG" "${files[@]}" --clobber

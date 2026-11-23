@@ -26,14 +26,15 @@ Everything runs on your device. See [docs/FEATURES.md](docs/FEATURES.md).
 ## Get it
 | Platform | How |
 |---|---|
-| Android | APK from [Releases](https://github.com/NodeX-AR/hazen/releases/latest), or Google Play |
+| Android | [`Hazen.apk`](https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen.apk) direct download, or Google Play |
 | iPhone / iPad | App Store / TestFlight, or add the website to your Home Screen |
-| Windows | `Hazen-*-win-*.exe` installer or portable build from Releases |
-| macOS | `Hazen-*-mac-*.dmg` from Releases |
-| Linux | `.AppImage` or `.deb` from Releases |
+| Windows | [`Hazen-Setup-x64.exe`](https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-Setup-x64.exe) guided installer, or [portable](https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-Portable-x64.exe) |
+| macOS | [Apple Silicon `.dmg`](https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-mac-arm64.dmg) or [Intel `.dmg`](https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-mac-x64.dmg) |
+| Linux | [`.AppImage`](https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-linux-x64.AppImage) or [`.deb`](https://github.com/NodeX-AR/Hazen/releases/latest/download/Hazen-linux-x64.deb) |
 | Browser | open the [live demo](https://nodex-ar.github.io/hazen/demo.html) (HTTPS, camera permission needed) |
 
-Step-by-step: [docs/INSTALLATION.md](docs/INSTALLATION.md).
+One-line install: `curl -fsSL https://raw.githubusercontent.com/NodeX-AR/Hazen/main/install.sh | sh` (macOS, Linux) or `irm https://raw.githubusercontent.com/NodeX-AR/Hazen/main/install.ps1 | iex` (Windows).
+The on-device AI ships inside every app, so it works offline from the first launch and is tuned for low-end devices. Step-by-step: [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
 ## Repository map
 ```

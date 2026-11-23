@@ -15,6 +15,7 @@ jobs:
           mkdir _site
           cp index.html demo.html manifest.webmanifest sw.js _site/
           cp -r icons branding assets _site/
+          node scripts/fetch-models.mjs _site/models
       - uses: actions/upload-pages-artifact@v3
         with: { path: _site }
       - id: d

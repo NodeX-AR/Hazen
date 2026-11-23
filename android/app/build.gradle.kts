@@ -14,7 +14,8 @@ android {
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }
-    androidResources { noCompress += listOf("glb", "wasm", "js", "html") }
+    // Bundled AI files stay uncompressed: faster to open on slow devices
+    androidResources { noCompress += listOf("glb", "wasm", "js", "html", "task", "tflite") }
     signingConfigs {
         create("release") {
             val ks = System.getenv("KEYSTORE_FILE")
