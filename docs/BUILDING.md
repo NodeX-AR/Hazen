@@ -1,6 +1,6 @@
 # Building and releasing
 
-All builds run on GitHub Actions. To publish a release (this is what makes the website's download buttons work):
+All builds run on GitHub Actions. To publish a release (this is what makes the website's download buttons work), the easiest way is **Actions > Release > Run workflow**, type `v1.0.0`, and wait: it builds the Android app and the Windows, macOS and Linux apps and attaches every file to that release. Other ways:
 - Push a tag: `git tag v1.0.0 && git push origin v1.0.0`, **or**
 - Actions > *Build Android* > Run workflow, and type `v1.0.0` in **release_tag**. Do the same for *Build desktop apps*.
 

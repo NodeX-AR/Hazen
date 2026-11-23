@@ -1,0 +1,26 @@
+name: Release (Android + Windows + macOS + Linux)
+
+# One click: builds every app and attaches the files to a GitHub Release.
+# Run it from the Actions tab: Release > Run workflow > type a version such as v1.0.0.
+# If the release already exists, the files are added to it (and replaced if they are already there).
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release version, for example v1.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    uses: ./.github/workflows/android.yml
+    with:
+      release_tag: ${{ inputs.tag }}
+    secrets: inherit
+  desktop:
+    uses: ./.github/workflows/desktop.yml
+    with:
+      release_tag: ${{ inputs.tag }}
+    secrets: inherit
