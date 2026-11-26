@@ -1,7 +1,6 @@
 # Changelog
 All notable changes. Format: Keep a Changelog; versions follow Semantic Versioning.
 
-## [Unreleased]
 ### Added
 - Direct downloads: loose release files with fixed names; the website buttons download the exact file for the visitor's device.
 - Branded installers: Windows setup wizard with sidebar art and licence page, macOS drag-to-Applications disk image, and one-line installers for macOS, Linux and Windows.
